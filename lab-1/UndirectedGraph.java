@@ -14,7 +14,7 @@ interface UndirectedGraph<T> {
 
 	boolean contains(T vertex);
 
-	List<T> getAdjacentVerticesOf(T vertex);
+	List<T> getAdjacentVertices(T vertex);
 
 	List<T> getAllVertices();
 

@@ -5,6 +5,9 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class DegreesOfSeparation {
@@ -35,6 +38,58 @@ public class DegreesOfSeparation {
 		return graph;
 	}
 
+	/*
+	 * Con este método se realiza una búsqueda en anchura para encontrar el grado de
+	 * separación entre dos usuarios.
+	 */
+	public static int friendshipBFS(AdjacencyListUndirectedGraph<String> graph,
+			String user1, String user2) {
+		// Se crea una cola para realizar la búsqueda en anchura.
+		Queue<String> queue = new LinkedList<String>();
+		// Se crea un arreglo para almacenar los usuarios visitados.
+		boolean[] visited = new boolean[graph.size()];
+		// Se crea un arreglo para almacenar el grado de separación de cada usuario.
+		int[] degreeOfSeparation = new int[graph.size()];
+		// Se inicializa el arreglo de usuarios visitados.
+		for (int i = 0; i < visited.length; i++) {
+			visited[i] = false;
+		}
+		// Se inicializa el arreglo de grados de separación.
+		for (int i = 0; i < degreeOfSeparation.length; i++) {
+			degreeOfSeparation[i] = -1;
+		}
+		// Se agrega el usuario inicial a la cola y se marca como visitado.
+		queue.add(user1);
+		visited[graph.getId(user1)] = true;
+		degreeOfSeparation[graph.getId(user1)] = 0;
+		// Se realiza la búsqueda en anchura.
+		while (!queue.isEmpty()) {
+			// Se obtiene el usuario actual.
+			String currentUser = queue.poll();
+			// Se obtienen los usuarios adyacentes al usuario actual.
+			List<String> adjacentUsers = graph.getAdjacentVertices(currentUser);
+			// Se recorren los usuarios adyacentes.
+			for (String adjacentUser : adjacentUsers) {
+				if (adjacentUser.equals(user2)) {
+					// Si el usuario adyacente es el usuario buscado, se retorna el grado de
+					// separación entre los usuarios.
+					return degreeOfSeparation[graph.getId(currentUser)] + 1;
+				}
+				// Si el usuario adyacente no ha sido visitado, se agrega a la cola y se
+				// marca como visitado.
+				else if (!visited[graph.getId(adjacentUser)]) {
+					queue.add(adjacentUser);
+					visited[graph.getId(adjacentUser)] = true;
+					// Se actualiza el grado de separación del usuario adyacente.
+					degreeOfSeparation[graph.getId(adjacentUser)] = degreeOfSeparation[graph.getId(currentUser)] + 1;
+				}
+			}
+		}
+		// Si al finalizar el recorrido de los usuarios adyacentes no se ha encontrado
+		// el usuario buscado, se retorna -1.
+		return -1;
+	}
+
 	public static int getDegreeOfSeparation(AdjacencyListUndirectedGraph<String> graph,
 			String user1, String user2) {
 		// Primero se verifica que ambos usuarios estén en el grafo.
@@ -46,7 +101,8 @@ public class DegreesOfSeparation {
 		else if (user1.equals(user2)) {
 			return 0;
 		}
-		return 0;
+		// Realizamos una búsqueda en anchura para encontrar el grado de separación
+		return friendshipBFS(graph, user1, user2);
 	}
 
 	public static void main(String[] args) {
@@ -56,6 +112,12 @@ public class DegreesOfSeparation {
 		} catch (FileNotFoundException e) {
 			System.out.println("El archivo 'input.txt' no existe en el directorio actual.");
 		}
-		System.out.println(friendshipGraph);
+		// Si no se pasan dos usuarios como argumentos, se imprime un mensaje de error.
+		if (args.length != 2) {
+			System.out.println("Se deben pasar dos usuarios como argumentos.");
+			return;
+		}
+		// Imprimimos el grado de separación entre los usuarios pasados como argumentos.
+		System.out.println(getDegreeOfSeparation(friendshipGraph, args[0], args[1]));
 	}
 }

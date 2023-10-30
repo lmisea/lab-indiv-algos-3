@@ -12,7 +12,8 @@ public class AdjacencyListUndirectedGraph<T> implements UndirectedGraph<T> {
 	 * Creamos un HashMap que mapea cada vértice a una lista de sus vertices
 	 * adyacentes. Solo es necesario un HashMap porque el grafo es no dirigido.
 	 */
-	HashMap<T, List<T>> adjacencyList = new HashMap<T, List<T>>();
+	private HashMap<T, List<T>> adjacencyList = new HashMap<T, List<T>>();
+	private HashMap<T, Integer> idMap = new HashMap<T, Integer>();
 
 	/*
 	 * Recibe un vértice y lo agrega al grafo. Retorna true si el vértice es
@@ -29,6 +30,8 @@ public class AdjacencyListUndirectedGraph<T> implements UndirectedGraph<T> {
 		if (vertex == null) {
 			return false;
 		}
+		// Se agrega el vértice al mapa de ids.
+		idMap.put(vertex, this.size());
 		// Se agrega el vértice al grafo.
 		adjacencyList.put(vertex, new LinkedList<T>());
 		return true;
@@ -96,7 +99,7 @@ public class AdjacencyListUndirectedGraph<T> implements UndirectedGraph<T> {
 	 * Si ocurre algún error, retorna la referencia null
 	 * Complejidad: O(1)
 	 */
-	public List<T> getAdjacentVerticesOf(T vertex) {
+	public List<T> getAdjacentVertices(T vertex) {
 		// Si el vértice no existe en el grafo, se retorna null.
 		if (!contains(vertex)) {
 			return null;
@@ -140,6 +143,18 @@ public class AdjacencyListUndirectedGraph<T> implements UndirectedGraph<T> {
 	 */
 	public int size() {
 		return adjacencyList.size();
+	}
+
+	/*
+	 * Retorna el id de un vértice.
+	 * Complejidad: O(1).
+	 */
+	public int getId(T vertex) {
+		return idMap.get(vertex);
+	}
+
+	public HashMap<T, Integer> getIdMap() {
+		return idMap;
 	}
 
 	/*
