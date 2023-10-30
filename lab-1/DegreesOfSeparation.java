@@ -41,6 +41,8 @@ public class DegreesOfSeparation {
 	/*
 	 * Con este método se realiza una búsqueda en anchura para encontrar el grado de
 	 * separación entre dos usuarios.
+	 * Decidí separar este método del método 'getDegreeOfSeparation' para poder
+	 * modularizar el código y hacerlo más legible.
 	 */
 	public static int friendshipBFS(AdjacencyListUndirectedGraph<String> graph,
 			String user1, String user2) {
@@ -60,8 +62,8 @@ public class DegreesOfSeparation {
 		}
 		// Se agrega el usuario inicial a la cola y se marca como visitado.
 		queue.add(user1);
-		visited[graph.getId(user1)] = true;
-		degreeOfSeparation[graph.getId(user1)] = 0;
+		visited[graph.getVertexId(user1)] = true;
+		degreeOfSeparation[graph.getVertexId(user1)] = 0;
 		// Se realiza la búsqueda en anchura.
 		while (!queue.isEmpty()) {
 			// Se obtiene el usuario actual.
@@ -73,15 +75,16 @@ public class DegreesOfSeparation {
 				if (adjacentUser.equals(user2)) {
 					// Si el usuario adyacente es el usuario buscado, se retorna el grado de
 					// separación entre los usuarios.
-					return degreeOfSeparation[graph.getId(currentUser)] + 1;
+					return degreeOfSeparation[graph.getVertexId(currentUser)] + 1;
 				}
 				// Si el usuario adyacente no ha sido visitado, se agrega a la cola y se
 				// marca como visitado.
-				else if (!visited[graph.getId(adjacentUser)]) {
+				else if (!visited[graph.getVertexId(adjacentUser)]) {
 					queue.add(adjacentUser);
-					visited[graph.getId(adjacentUser)] = true;
+					visited[graph.getVertexId(adjacentUser)] = true;
 					// Se actualiza el grado de separación del usuario adyacente.
-					degreeOfSeparation[graph.getId(adjacentUser)] = degreeOfSeparation[graph.getId(currentUser)] + 1;
+					degreeOfSeparation[graph
+							.getVertexId(adjacentUser)] = degreeOfSeparation[graph.getVertexId(currentUser)] + 1;
 				}
 			}
 		}
@@ -90,6 +93,9 @@ public class DegreesOfSeparation {
 		return -1;
 	}
 
+	/*
+	 * Con este método se obtiene el grado de separación entre dos usuarios.
+	 */
 	public static int getDegreeOfSeparation(AdjacencyListUndirectedGraph<String> graph,
 			String user1, String user2) {
 		// Primero se verifica que ambos usuarios estén en el grafo.

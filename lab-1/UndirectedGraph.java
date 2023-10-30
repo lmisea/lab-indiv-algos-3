@@ -21,4 +21,6 @@ interface UndirectedGraph<T> {
 	boolean removeVertex(T vertex);
 
 	int size();
+
+	int getVertexId(T vertex);
 }

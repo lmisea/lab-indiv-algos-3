@@ -149,10 +149,14 @@ public class AdjacencyListUndirectedGraph<T> implements UndirectedGraph<T> {
 	 * Retorna el id de un vértice.
 	 * Complejidad: O(1).
 	 */
-	public int getId(T vertex) {
+	public int getVertexId(T vertex) {
 		return idMap.get(vertex);
 	}
 
+	/*
+	 * Retorna el mapa de ids.
+	 * Complejidad: O(1).
+	 */
 	public HashMap<T, Integer> getIdMap() {
 		return idMap;
 	}
