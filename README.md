@@ -6,7 +6,7 @@ En este repositorio se encontrarán los dos laboratorios individuales de la mate
 
 ## Laboratorio 1
 
-El laboratorio 1 consiste en la implementación de un programa que permita establecer el grado de separación entre dos personas en una red social.
+El laboratorio 1 consiste en la implementación de un programa que permita establecer el grado de separación de amistad entre dos usuarios de una red social, en la que la amistad es una relación simétrica. Se implementó una **búsqueda en anchura (BFS)** para resolver este problema. Más detalles en el [informe del primer laboratorio](https://github.com/lmisea/lab-indiv-algos-3/tree/main/lab-1#readme).
 
 ## Laboratorio 2
 
