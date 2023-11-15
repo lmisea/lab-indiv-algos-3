@@ -1,4 +1,3 @@
-import java.util.Collection;
 import java.util.List;
 
 interface Digraph<T> {
@@ -14,6 +13,8 @@ interface Digraph<T> {
 
 	List<T> getOutwardEdges(T from);
 
+	boolean containsEdge(T from, T to);
+
 	List<T> getVerticesConnectedTo(T vertex);
 
 	List<T> getAllVertices();
@@ -21,6 +22,4 @@ interface Digraph<T> {
 	boolean remove(T vertex);
 
 	int size();
-
-	Graph<T> subgraph(Collection<T> vertices);
 }

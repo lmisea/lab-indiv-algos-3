@@ -4,7 +4,6 @@
  * Juan Cuevas (19-10056) y Luis Isea (19-10175)
  */
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,8 +17,9 @@ public class AdjacencyListDigraph<T> implements Digraph<T> {
 	 * entradas
 	 * y la suma de las longitudes de las listas de adyacencia es 2m.
 	 */
-	HashMap<T, List<T>> adjacencyListOut = new HashMap<T, List<T>>();
-	HashMap<T, List<T>> adjacencyListIn = new HashMap<T, List<T>>();
+	private HashMap<T, List<T>> adjacencyListOut = new HashMap<T, List<T>>();
+	private HashMap<T, List<T>> adjacencyListIn = new HashMap<T, List<T>>();
+	private HashMap<Integer, T> idMap = new HashMap<Integer, T>();
 
 	/*
 	 * Recibe un vértice y lo agrega al grafo. Retorna true si el vértice es
@@ -36,6 +36,8 @@ public class AdjacencyListDigraph<T> implements Digraph<T> {
 		if (vertex == null) {
 			return false;
 		}
+		// Se agrega el vértice al mapa de ids.
+		idMap.put(this.size(), vertex);
 		// Se mapea el vértice a una lista vacía en ambos HashMap, de sucesores y de
 		// predecesores.
 		adjacencyListOut.put(vertex, new LinkedList<T>());
@@ -130,6 +132,39 @@ public class AdjacencyListDigraph<T> implements Digraph<T> {
 	}
 
 	/*
+	 * Recibe dos vértices 'from' y 'to' y retorna true si existe un arco saliente
+	 * de 'from' y entrante a 'to'.
+	 * Retorna false en caso contrario.
+	 * Complejidad: O(1).
+	 */
+	public boolean containsEdge(T from, T to) {
+		// Si alguno de los vértices no existe en el grafo, no se existe el arco y se
+		// retorna false.
+		if (!contains(from) || !contains(to)) {
+			return false;
+		}
+		// Verificamos si el arco existe en el grafo.
+		return adjacencyListOut.get(from).contains(to);
+	}
+
+	/*
+	 * Recibe un id y retorna el vértice asociado a ese id.
+	 * Si ocurre algún error, retorna la referencia null.
+	 * Complejidad: O(1).
+	 */
+	public T getVertex(int id) {
+		return idMap.get(id);
+	}
+
+	/*
+	 * Retorna el mapa de ids del grafo.
+	 * Complejidad: O(1).
+	 */
+	public HashMap<Integer, T> getIdMap() {
+		return idMap;
+	}
+
+	/*
 	 * Recibe un vértice v y retorna la lista de vértices adyacentes a v. Es decir,
 	 * retorna la lista de todos los u ∈ V tales que (v, u) ∈ E o (u, v) ∈ E.
 	 * Si ocurre algún error, retorna la referencia null.
@@ -184,39 +219,6 @@ public class AdjacencyListDigraph<T> implements Digraph<T> {
 	 */
 	public int size() {
 		return adjacencyListOut.size();
-	}
-
-	/*
-	 * Recibe una colección V′ de vértices y retorna otra instancia de grafo
-	 * donde el conjunto de vértices contiene solo aquellos vértices presentes en V’
-	 * y solo aquellos arcos asociados a esos vértices. Es decir,
-	 * retorna G′ = (V′, E′)
-	 * donde E′ = {(u, v) ∈ E ∣ u ∈ V′ ∧ v ∈ V′}.
-	 * Si ocurre algún error, retorna la referencia null.
-	 * Complejidad: O(n*m). Siendo n la cantidad de vértices y m la cantidad
-	 * promedio de arcos por vértice.
-	 */
-	public Graph<T> subgraph(Collection<T> vertices) {
-		// Si la colección de vértices es null, se retorna null.
-		if (vertices == null) {
-			return null;
-		}
-		Graph<T> result = new AdjacencyListGraph<T>();
-		for (T vertex : vertices) {
-			// Si alguno de los vértices no existe en el grafo, se retorna null.
-			if (!contains(vertex)) {
-				return null;
-			}
-			result.add(vertex);
-		}
-		for (T vertex : vertices) {
-			for (T edge : adjacencyListOut.get(vertex)) {
-				if (vertices.contains(edge)) {
-					result.connect(vertex, edge);
-				}
-			}
-		}
-		return result;
 	}
 
 	/*
