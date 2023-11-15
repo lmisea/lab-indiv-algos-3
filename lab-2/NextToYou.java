@@ -30,6 +30,17 @@ public class NextToYou {
 	 * Método que crea el dígrafo de la ciudad, dónde los vertices son
 	 * comercios aliados a NextToYou y la arista (a, b) representa que hay
 	 * una vía de poco tráfico que lleva desde `a` hasta `b`.
+	 *
+	 * Complejidad: O(n*m), donde n es el número de comercios aliados a
+	 * NextToYou (n = |V|) y m es el número de vías de bajo tráfico que
+	 * conectan a los comercios (m = |E|).
+	 *
+	 * Esto se debe a que se recorre el archivo 'Caracas.txt' donde cada línea
+	 * representa una vía de bajo tráfico entre dos comercios, y se realiza una
+	 * operación de complejidad O(n) por línea para agregar la vía al grafo.
+	 *
+	 * Es decir, complejidad O(|V|*|E|).
+	 * Esto es porque cada línea del archivo
 	 */
 	public static AdjacencyListDigraph<String> createCityGraph(String nombreArchivo) {
 		// Creamos un grafo vacío.
@@ -78,6 +89,12 @@ public class NextToYou {
 	 * grafo.
 	 * Y luego crear un HashMap que mapee cada componente fuertemente conexa a
 	 * los vértices que la componen.
+	 *
+	 * Complejidad: O(n^3), donde n es el número de vértices del grafo (n = |V|).
+	 * Es decir, complejidad O(|V|^3).
+	 * Es complejidad O(|V|^3) porque al calcular las componentes fuertemente
+	 * conexas del grafo, se calcula la matriz de alcance del grafo, y el
+	 * algoritmo de Roy-Warshall tiene complejidad O(|V|^3).
 	 */
 	public static HashMap<Integer, List<String>> determinarLocalidades(AdjacencyListDigraph<String> grafo) {
 		// Las componentes fuertemente conexas son las localidades, así que
@@ -100,9 +117,12 @@ public class NextToYou {
 	 * Método que implementa el algoritmo de Roy-Warshall para hallar la matriz
 	 * de alcance de un grafo.
 	 *
-	 * Una matriz de alcance es una matriz booleana de nxn tal que la coordenada
-	 * (i, j) es verdadera si y solo si existe un camino de alcance entre el
-	 * vértice i y el vértice j en el dígrafo.
+	 * Una matriz de alcance es una matriz booleana de nxn (n = |V|) tal que la
+	 * coordenada (i, j) es verdadera si y solo si existe un camino de alcance entre
+	 * el vértice i y el vértice j en el dígrafo.
+	 *
+	 * Complejidad: O(n^3), donde n es el número de vértices del grafo (n = |V|).
+	 * Es decir, complejidad O(|V|^3).
 	 */
 	public static boolean[][] calcularMatrizDeAlcance(AdjacencyListDigraph<String> grafo) {
 		int n = grafo.size();
@@ -138,6 +158,11 @@ public class NextToYou {
 	 * fuertemente conexa del vértice i es el valor del arreglo en la posición
 	 * i. Y dos vértices están en la misma componente fuertemente conexa si y
 	 * solo si tienen el mismo valor en el arreglo.
+	 *
+	 * Complejidad: O(n^3), donde n es el número de vértices del grafo (n = |V|).
+	 * Es decir, complejidad O(|V|^3).
+	 * Es complejidad O(|V|^3) porque se calcula la matriz de alcance del grafo, y
+	 * el algoritmo de Roy-Warshall tiene complejidad O(|V|^3).
 	 */
 	public static int[] stronglyConnectedComponents(AdjacencyListDigraph<String> grafo) {
 		// Calculamos la matriz de alcance del grafo.
@@ -175,6 +200,11 @@ public class NextToYou {
 	 * repartidores.
 	 * Para localidades grandes de 6 o más comercios, se necesitan treinta
 	 * repartidores.
+	 *
+	 * Complejidad: O(n), donde n es el número de localidades.
+	 * En el peor de los casos, todas las localidades son de tamaño 1,
+	 * por lo que n = |V|, donde V es el conjunto de vértices del grafo.
+	 * Es decir, complejidad O(|V|).
 	 */
 	public static int calcularNumRepartidores(HashMap<Integer, List<String>> localidades) {
 		int numRepartidores = 0;

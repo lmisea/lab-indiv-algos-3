@@ -41,7 +41,9 @@ public class AdjacencyListUndirectedGraph<T> implements UndirectedGraph<T> {
 	 * Recibe dos vértices 'ver1' y 'ver2' y agrega al grafo la arista (ver1, ver2).
 	 * Retorna true si la arista es agregada con éxito.
 	 * Retorna false en caso contrario.
-	 * Complejidad: O(1).
+	 * Complejidad: O(n). Siendo n la cantidad de vértices.
+	 * Ya que se debe verificar que el arco no exista en el grafo.
+	 * Y para ello se debe recorrer la lista de adyacencia de 'from'.
 	 */
 	public boolean addEdge(T ver1, T ver2) {
 		// Si alguno de los vértices no existe en el grafo, no se agrega la arista y
@@ -97,14 +99,17 @@ public class AdjacencyListUndirectedGraph<T> implements UndirectedGraph<T> {
 	 * Recibe un vértice v y retorna la lista de vertices adyacentes a v.
 	 * Es decir, retorna la lista de todos los vertices u tales que (v, u) ∈ E.
 	 * Si ocurre algún error, retorna la referencia null
-	 * Complejidad: O(1)
+	 * Complejidad: O(n), siendo n la cantidad de vertices.
+	 * Esto ya que para copiar la lista, se debe recorrer cada elemento de
+	 * la lista una vez.
 	 */
 	public List<T> getAdjacentVertices(T vertex) {
 		// Si el vértice no existe en el grafo, se retorna null.
 		if (!contains(vertex)) {
 			return null;
 		}
-		return adjacencyList.get(vertex);
+		List<T> adjacentVertices = new LinkedList<T>(adjacencyList.get(vertex));
+		return adjacentVertices;
 	}
 
 	/*

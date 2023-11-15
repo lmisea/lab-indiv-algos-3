@@ -61,9 +61,33 @@ La salida esperada del programa con el archivo _Caracas.txt_ del repositorio es 
 
 ## Detalles de la implementación
 
+La dificultad de este problema es encontrar las localidades de la ciudad. Ya que realmente eso significa encontrar las componentes fuertemente conexas del grafo. Ya que una localidad es un conjunto de comercios entre los cuales se puede transitar sin pasar por vías de mucho tráfico. Y esto es equivalente a decir que es un conjunto de nodos entre los cuales, para cada par de nodos, existe un camino entre ellos.
+
+Para esto utilizamos el algoritmo Roy-Warshall, que nos permite encontrar la matriz de alcance del grafo. Que básicamente es una matriz en dónde se especifica si un nodo es alcanzable desde otro nodo. Es decir, si existe un camino entre ellos.
+Y luego, con esta matriz de alcance, podemos encontrar las componentes fuertemente conexas del grafo, utilizando el algoritmo descrito en el libro de texto de Meza y Ortega.
+
+Este algoritmo crea un arreglo de enteros, que representa la componente fuertemente conexa a la que pertenece cada nodo. Es decir, dos nodos pertenecen a la misma componente fuertemente conexa si y solo si tienen el mismo valor en el arreglo de enteros.
+
+Esto representó un pequeño desafío, ya que se optó por utilizar la lista de adyacencia creada para el primer proyecto del curso. Y esta lista de adyacencia no tiene una forma de obtener el nodo asociado a un índice. Por lo que se optó por adoptar la misma estrategia que se utilizó en el primer laboratorio, que es crear un HashMap de ids, que asocia cada id con su respectivo nodo.
+
+Con esto, se puede obtener el nodo asociado a un índice en la lista de adyacencia, y luego obtener el valor de la componente fuertemente conexa de ese nodo.
+
+Una vez obtenido el arreglo de enteros de las componentes fuertemente conexas, se procede a crear un HashMap de componentes fuertemente conexas, que asocia cada componente fuertemente conexa con un conjunto de nodos. Esto se hace recorriendo el arreglo de enteros y agregando cada nodo a la componente fuertemente conexa a la que pertenece.
+
+Esto permite obtener las localidades de la ciudad, ya que cada componente fuertemente conexa es una localidad. Y de esa forma se puede calcular el tamaño de cada localidad, y determinar cuántos repartidores se necesitan para cada localidad, y así determinar cuántos repartidores se necesitan en total.
+
 ## Complejidad del algoritmo
 
 Dibujemos una tabla con las complejidades de cada método de la clase `NextToYou`:
 
-| Método | Complejidad |
-| ------ | ----------- |
+| Método                      | Complejidad          |
+| --------------------------- | -------------------- |
+| createCityGraph             | O(\|V\|\*\|E\|)      |
+| determinarLocalidades       | O(\|V\|<sup>3</sup>) |
+| calcularMatrizDeAlcance     | O(\|V\|<sup>3</sup>) |
+| stronglyConnectedComponents | O(\|V\|<sup>3</sup>) |
+| calcularNumRepartidores     | O(\|V\|)             |
+
+Donde `|V|` es la cantidad de comercios en la ciudad, y `|E|` es la cantidad de vías de bajo tráfico, que conectan a los comercios.
+
+**Nota:** Más detalles sobre la complejidad de cada método se encuentran en los comentarios del código de la clase `NextToYou`.

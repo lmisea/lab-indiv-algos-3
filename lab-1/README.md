@@ -1,4 +1,4 @@
-# Laboratorio 1
+# Laboratorio 1: Grados de Separación
 
 **Autor:** _Luis Isea_.
 **Carnet:** _19-10175_.
@@ -54,4 +54,16 @@ Por su parte el arreglo de grados de separación se utilizó para almacenar el g
 
 ## Complejidad del algoritmo
 
-La complejidad del algoritmo es **O(V + E)**, donde V es la cantidad de personas y E es la cantidad de amistades. Ya que el algoritmo recorre todos los vértices y aristas del grafo, y en cada iteración del ciclo principal del algoritmo, se encolan y desencolan vértices, lo que es O(1) en cada caso.
+La complejidad del algoritmo es **O(|V| + |E|)**, donde `|V|` es la cantidad de personas y `E` es la cantidad de amistades. Ya que el algoritmo recorre todos los vértices y aristas del grafo, y en cada iteración del ciclo principal del algoritmo, se encolan y desencolan vértices, lo que es O(1) en cada caso.
+
+Dibujamos una tabla de complejidades para cada método de la clase `DegreesOfSeparation`:
+
+| Método                | Complejidad     |
+| --------------------- | --------------- |
+| processInput          | O(\|V\|\*\|E\|) |
+| friendshipBFS         | O(\|V\|+\|E\|)  |
+| getDegreeOfSeparation | O(\|V\|+\|E\|)  |
+
+Donde `|V|` es la cantidad de personas y `|E|` es la cantidad de amistades.
+
+**Nota:** Más detalles sobre la complejidad de cada método se encuentran en los comentarios del código de la clase `DegreesOfSeparation`.

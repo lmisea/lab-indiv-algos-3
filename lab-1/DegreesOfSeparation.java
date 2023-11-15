@@ -14,6 +14,15 @@ public class DegreesOfSeparation {
 	/*
 	 * Con este método se procesan las amistades de los usuarios extraídas del
 	 * archivo 'input.txt' y se crea el grafo no dirigido que las representa.
+	 *
+	 * Complejidad O(n*m), donde n es el número de usuarios y m es el número de
+	 * amistades.
+	 * Esto se debe a que se recorre el archivo 'input.txt' donde cada línea
+	 * representa una amistad entre dos usuarios, y se realiza una operación de
+	 * complejidad O(n) por línea para agregar la amistad al grafo.
+	 *
+	 * Es decir, complejidad O(|V|*|E|), donde |V| es el número de vértices y |E|
+	 * es el número de aristas.
 	 */
 	public static AdjacencyListUndirectedGraph<String> processInput() throws FileNotFoundException {
 		AdjacencyListUndirectedGraph<String> graph = new AdjacencyListUndirectedGraph<String>();
@@ -43,6 +52,11 @@ public class DegreesOfSeparation {
 	 * separación entre dos usuarios.
 	 * Decidí separar este método del método 'getDegreeOfSeparation' para poder
 	 * modularizar el código y hacerlo más legible.
+	 *
+	 * Complejidad O(n + m), donde n es el número de usuarios y m es el número de
+	 * amistades.
+	 * Es decir, complejidad O(|V| + |E|), donde |V| es el número de vértices y |E|
+	 * es el número de aristas.
 	 */
 	public static int friendshipBFS(AdjacencyListUndirectedGraph<String> graph,
 			String user1, String user2) {
@@ -95,6 +109,13 @@ public class DegreesOfSeparation {
 
 	/*
 	 * Con este método se obtiene el grado de separación entre dos usuarios.
+	 *
+	 * Complejidad O(n + m), donde n es el número de usuarios y m es el número de
+	 * amistades.
+	 * Esto se debe a que se realiza una búsqueda en anchura para encontrar el grado
+	 * de separación entre los usuarios.
+	 * Es decir, complejidad O(|V| + |E|), donde |V| es el número de vértices y |E|
+	 * es el número de aristas.
 	 */
 	public static int getDegreeOfSeparation(AdjacencyListUndirectedGraph<String> graph,
 			String user1, String user2) {
