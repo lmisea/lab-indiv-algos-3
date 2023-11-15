@@ -15,6 +15,8 @@ interface Digraph<T> {
 
 	boolean containsEdge(T from, T to);
 
+	T getVertex(int index);
+
 	List<T> getVerticesConnectedTo(T vertex);
 
 	List<T> getAllVertices();

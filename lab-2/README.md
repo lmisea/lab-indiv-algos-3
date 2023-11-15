@@ -23,8 +23,8 @@ de repartidores necesaria para cubrir la demanda según las estimaciones
 ## Estructura de archivos
 
 - **NextToYou.java**: Este archivo contiene la clase principal del programa, `NextToYou`, que se encarga de leer el archivo _Caracas.txt_, crear las localidades y calcular la cantidad de repartidores necesarios para cubrir la demanda.
-- **Digraph.java**: Archivo con la interfaz `UndirectedGraph`, que representa un grafo no dirigido. La interfaz es una modificación de la interfaz `Graph` del primer proyecto del curso, ya que ahora el grafo es no dirigido.
-- **AdjacencyListDigraph.java**: Archivo con la clase `AdjacencyListUndirectedGraph`, que implementa la interfaz `UndirectedGraph` utilizando listas de adyacencia. Esta clase es una modificación de la clase `AdjacencyListGraph` del primer proyecto del curso, ya que ahora el grafo es no dirigido.
+- **Digraph.java**: Archivo con la interfaz `Digraph`, que representa un dígrafo. La interfaz es una modificación de la interfaz `Graph` del primer proyecto del curso, ya que se agregaron un par de métodos adicionales, como `getVertex` y `containsEdge`.
+- **AdjacencyListDigraph.java**: Archivo con la clase `AdjacencyListDigraph`, que implementa la interfaz `Digraph` utilizando listas de adyacencia. Esta clase es una modificación de la clase `AdjacencyListGraph` del primer proyecto del curso, ya que se agregaron un par de métodos adicionales y un HashMap adicional para mapear cada vértice a su id en el grafo.
 - **Caracas.txt**: Archivo con las vías de bajo tráfico de la ciudad de Caracas. Cada línea del archivo contiene un par de nombres de comercios separados por coma. Si un par de comercios a, b aparece en este archivo, significa que hay una vía de bajo tráfico desde a hasta b. Estas vías son de un solo sentido.
 
   Ejemplo Caracas.txt
