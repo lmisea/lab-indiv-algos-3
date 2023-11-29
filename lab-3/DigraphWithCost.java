@@ -92,6 +92,22 @@ public class DigraphWithCost<T> {
 		return true;
 	}
 
+	public Double getCost(T ver1, T ver2) {
+		// Si alguno de los vértices no existe en el grafo, no se elimina la arista y
+		// se retorna false.
+		if (!contains(ver1) || !contains(ver2)) {
+			return null;
+		}
+		// Se retorna el costo de la arista, viendo en la lista de
+		// sucesores de 'ver1' el costo de la arista (ver1, ver2).
+		for (HashMap<T, Double> edge : adjListOut.get(ver1)) {
+			if (edge.containsKey(ver2)) {
+				return edge.get(ver2);
+			}
+		}
+		return null;
+	}
+
 	/*
 	 * Recibe un vértice y retorna true si el vértice pertenece a V.
 	 * Retorna false en caso contrario.
