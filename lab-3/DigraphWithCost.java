@@ -15,7 +15,6 @@ public class DigraphWithCost<T> {
 	 */
 	private HashMap<T, List<HashMap<T, Double>>> adjListIn = new HashMap<T, List<HashMap<T, Double>>>();
 	private HashMap<T, List<HashMap<T, Double>>> adjListOut = new HashMap<T, List<HashMap<T, Double>>>();
-	private HashMap<T, Integer> idMap = new HashMap<T, Integer>();
 
 	/*
 	 * Recibe un vértice y lo agrega al grafo. Retorna true si el vértice es
@@ -32,8 +31,6 @@ public class DigraphWithCost<T> {
 		if (vertex == null) {
 			return false;
 		}
-		// Se agrega el vértice al mapa de ids.
-		idMap.put(vertex, this.size());
 		// Se agrega el vértice al grafo.
 		adjListOut.put(vertex, new LinkedList<HashMap<T, Double>>());
 		adjListIn.put(vertex, new LinkedList<HashMap<T, Double>>());
@@ -55,16 +52,13 @@ public class DigraphWithCost<T> {
 		if (!contains(ver1) || !contains(ver2)) {
 			return false;
 		}
-		// Si la arista ya existe en el grafo, no se agrega la arista y se retorna
-		// false.
-		if (adjListIn.get(ver1).contains(ver2)) {
-			return false;
+		// Si la arista ya existe en el grafo, se actualiza el costo de la arista.
+		if (containsEdge(ver1, ver2)) {
+			removeEdge(ver1, ver2);
 		}
 		// Se añade la arista al grafo.
 		adjListOut.get(ver1).add(new HashMap<T, Double>(Map.of(ver2, cost)));
 		adjListIn.get(ver2).add(new HashMap<T, Double>(Map.of(ver1, cost)));
-		// Se añade el costo al mapa de costos.
-
 		return true;
 	}
 
@@ -83,13 +77,40 @@ public class DigraphWithCost<T> {
 		}
 		// Si la arista no existe en el grafo, no se elimina la arista y se retorna
 		// false.
-		if (!adjListOut.get(ver1).contains(ver2)) {
+		if (!containsEdge(ver1, ver2)) {
 			return false;
 		}
-		// Se elimina la arista del grafo.
-		adjListOut.get(ver1).remove(ver2);
-		adjListIn.get(ver2).remove(ver1);
+		// Se elimina 'ver2' de la lista de sucesores de 'ver1'.
+		for (HashMap<T, Double> edge : adjListOut.get(ver1)) {
+			if (edge.containsKey(ver2)) {
+				adjListOut.get(ver1).remove(edge);
+				break;
+			}
+		}
+		// Se elimina 'ver1' de la lista de predecesores de 'ver2'.
+		for (HashMap<T, Double> edge : adjListIn.get(ver2)) {
+			if (edge.containsKey(ver1)) {
+				adjListIn.get(ver2).remove(edge);
+				break;
+			}
+		}
 		return true;
+	}
+
+	public boolean containsEdge(T ver1, T ver2) {
+		// Si alguno de los vértices no existe en el grafo, no se elimina la arista y
+		// se retorna false.
+		if (!contains(ver1) || !contains(ver2)) {
+			return false;
+		}
+		// Si la arista no existe en el grafo, no se elimina la arista y se retorna
+		// false.
+		for (HashMap<T, Double> edge : adjListOut.get(ver1)) {
+			if (edge.containsKey(ver2)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Double getCost(T ver1, T ver2) {
@@ -193,22 +214,6 @@ public class DigraphWithCost<T> {
 	 */
 	public int size() {
 		return adjListOut.size();
-	}
-
-	/*
-	 * Retorna el id de un vértice.
-	 * Complejidad: O(1).
-	 */
-	public int getVertexId(T vertex) {
-		return idMap.get(vertex);
-	}
-
-	/*
-	 * Retorna el mapa de ids.
-	 * Complejidad: O(1).
-	 */
-	public HashMap<T, Integer> getIdMap() {
-		return idMap;
 	}
 
 	/*

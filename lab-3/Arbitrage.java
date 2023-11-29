@@ -29,6 +29,12 @@ public class Arbitrage {
 				// Aquí se le asigna el costo a la arista, es decir, el valor de la tasa de
 				// cambio.
 				graph.addEdge(lineArray[0], lineArray[1], Double.parseDouble(lineArray[2]));
+				// Verificamos si hay una arista inversa entre las monedas.
+				if (graph.containsEdge(lineArray[1], lineArray[0])) {
+					// Si es así, entonces no se agrega la arista inversa.
+					line = reader.readLine();
+					continue;
+				}
 				// Hacemos una regla de tres para obtener el costo de la arista inversa.
 				double costoInverso = 1 / Double.parseDouble(lineArray[2]);
 				// Se agrega la arista inversa entre las monedas al grafo.
@@ -46,6 +52,7 @@ public class Arbitrage {
 	public static void main(String[] args) {
 		// Se crea el grafo de monedas.
 		DigraphWithCost<String> graph = createCurrencyGraph("tasas.txt");
+		System.out.println(graph);
 		// Se verifica si ocurre un arbitraje.
 		ocurreArbitraje(graph);
 	}
@@ -58,18 +65,18 @@ public class Arbitrage {
 	public static String recorrerCiclosRec(DigraphWithCost<String> grafo, List<String> cicloParcial) {
 		// Verificamos si después de agregar la última moneda, volvemos a la moneda
 		// inicial.
-		if (cicloParcial.size() > 1 && cicloParcial.get(cicloParcial.size() - 1) == cicloParcial.get(0)) {
+		if (cicloParcial.size() > grafo.size() + 1) {
+			return "";
+		}
+		if (cicloParcial.size() > 1 && cicloParcial.get(0).equals(cicloParcial.get(cicloParcial.size() - 1))) {
 			// Verificamos si al terminar el ciclo, tenemos más de 1 unidad de la moneda
 			// inicial. Es decir, si ocurre un arbitraje.
 			if (cantidadMonedaInicial(grafo, cicloParcial) > 1.001) {
 				// Si es así, entonces retornamos que ocurre un arbitraje.
 				System.out.println("Solución parcial: " + cicloParcial);
 				return "DINERO FÁCIL DESDE TU CASA";
-			} else {
-				System.out.println("Solución parcial: " + cicloParcial);
 			}
-		}
-		if (cicloParcial.size() > grafo.size()) {
+			System.out.println("Solución parcial: " + cicloParcial);
 			return "";
 		}
 		// Si aún no hemos llegado al final del ciclo, entonces seguimos buscando
@@ -110,17 +117,17 @@ public class Arbitrage {
 		return grafo.getOutwardEdges(ultima);
 	}
 
-	public static Double cantidadMonedaInicial(DigraphWithCost<String> grafo, List<String> cicloParcial) {
+	public static Double cantidadMonedaInicial(DigraphWithCost<String> grafo, List<String> ciclo) {
 		// Tomamos la primera moneda del ciclo parcial.
-		String monedaInicial = cicloParcial.get(0);
+		String monedaInicial = ciclo.get(0);
 		// Tomamos el costo de la arista entre la primera moneda y la segunda moneda.
-		Double cantidad = grafo.getCost(monedaInicial, cicloParcial.get(1));
+		Double cantidad = grafo.getCost(monedaInicial, ciclo.get(1));
 		// Iteramos sobre las demás monedas del ciclo parcial.
-		for (int i = 1; i < cicloParcial.size() - 1; i++) {
+		for (int i = 1; i < ciclo.size() - 1; i++) {
 			// Tomamos la moneda actual.
-			String monedaActual = cicloParcial.get(i);
+			String monedaActual = ciclo.get(i);
 			// Tomamos la siguiente moneda.
-			String monedaSiguiente = cicloParcial.get(i + 1);
+			String monedaSiguiente = ciclo.get(i + 1);
 			// Tomamos el costo de la arista entre la moneda actual y la siguiente moneda.
 			double costo = grafo.getCost(monedaActual, monedaSiguiente);
 			// Multiplicamos la cantidad de moneda inicial por el costo de la arista.
