@@ -54,7 +54,20 @@ Esto indica que sí se puede hacer arbitrage con las tasas de cambio del archivo
 
 ## Detalles de la implementación
 
-Para resolver este problema, se modeló el conjunto de tasas de cambio como un grafo dirigido con costos, donde cada nodo representa una moneda y cada arista representa una tasa de cambio. Para esto, se modificó la implementación del grafo dirigido con listas de adyacencia del primer proyecto para que ahora cada nodo tenga una lista de HashMaps, donde cada HashMap representa una arista y tiene como llave el nodo destino y como valor el costo de la arista.
+Para resolver este problema, se modeló un grafo dirigido con costos, donde cada nodo representa una moneda y cada arista representa una tasa de cambio. Para esto, se modificó la implementación del grafo dirigido con listas de adyacencia del primer proyecto para que ahora cada nodo tenga dos listas de HashMaps, una para los nodos sucesores y otra para los nodos predecesores
+donde cada HashMap en estas listas representa una arista y tiene como key el nodo destino y como value el costo de la arista.
+
+Por cada tasa de cambio en el archivo _tasas.txt_, se crean dos aristas, una en cada dirección, para que el grafo sea bidireccional. Y se construye el costo de la arista inversa usando la regla de tres. Pero el programa también soporta que se ingrese la tasa inversa de una tasa de cambio ya existente, y en ese caso solo se actualiza el costo de la arista inversa. Esto hace que el programa soporte tasas unidireccionales y bidireccionales al mismo tiempo.
+
+Para determinar si se puede hacer arbitrage, se recorre el grafo usando DFS, recorriendo todos los ciclos posibles de hasta `|V|+1` nodos. Cuando se encuentra un ciclo, se calcula la cantidad de moneda inicial que se obtiene al recorrer el ciclo, y si esta cantidad es mayor a **1.001**, entonces el programa imprime `DINERO FÁCIL DESDE TU CASA` y termina. Si no se encuentra ningún ciclo que cumpla con esta condición, entonces el programa imprime `NO SE PUEDE HACER DINERO FÁCIL DESDE TU CASA` y termina.
+
+Se decidió poner `1.001` como el máximo valor de ganancia antes de que se considere que se puede hacer arbitraje. Es decir, que si se obtiene una ganancia de `1.001` o menos, entonces no se considera que se puede hacer arbitraje. Esto se debe a que ocurren errores de redondeo al hacer las operaciones con los costos de las aristas, y por lo tanto, no se puede asegurar que se pueda hacer arbitraje con una ganancia de `1.001` o menos.
+
+De todas formas, si se desea cambiar este valor, se puede modificar el parámetro _maxGananciaDespreciable_ en la llamada al método `ocurreArbitraje` en el método `main` de la clase `Arbitrage` y así decidir a partir de qué valor se considera que se puede hacer arbitraje.
+
+Este programa tiene una complejidad de **O(\|V\|<sup>\|V\|+1</sup>)**, donde `|V|` es la cantidad de monedas diferentes que hay. Esto se debe a que hay `|V|` nodos posibles para empezar el recorrido, y cada nodo siguiente tiene `|V|-1` nodos siguientes posibles, sin importar la posición en la que se encuentre en el recorrido.
+
+Así se tiene que la cantidad de ciclos posibles es `|V|*(|V|-1)*(|V|-1)*...*(|V|-1)`, es decir, `|V|` multiplicado por `|V|` veces `|V|-1`. Esto es igual a **O(|V|<sup>\|V\|+1</sup>)**.
 
 ## Complejidad del algoritmo
 

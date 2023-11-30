@@ -83,19 +83,20 @@ public class Arbitrage {
 	 * Complejidad: O(|V|^(|V|+1)), donde |V| es el número de monedas.
 	 * Ya que se llama a recorrerCiclosRec, que tiene complejidad O(|V|^(|V|+1)).
 	 */
-	public static void ocurreArbitraje(DigraphWithCost<String> grafo, Double minGanancia) {
+	public static void ocurreArbitraje(DigraphWithCost<String> grafo, Double maxGananciaDespreciable) {
 		List<String> cicloInicial = new LinkedList<>();
-		System.out.println(recorrerCiclosRec(grafo, cicloInicial, minGanancia));
+		System.out.println(recorrerCiclosRec(grafo, cicloInicial, maxGananciaDespreciable));
 	}
 
 	/*
 	 * Método que recorre todos los ciclos de un grafo de monedas.
 	 * Para ello, se hace una búsqueda en profundidad (DFS) sobre el grafo.
 	 * Cada vez que se llega a un vértice, se agrega al ciclo parcial.
-	 * Cuando se llega a un vértice que ya está en el ciclo parcial, se verifica
-	 * si se ha obtenido una mayor cantidad de la moneda inicial.
-	 * Si es así, entonces se retorna que ocurre un arbitraje.
-	 * Si no es así, entonces se sigue buscando.
+	 * Cuando se llega a agregar la primera moneda al ciclo parcial de nuevo,
+	 * se verifica si siguiendo ese ciclo ocurre un arbitraje.
+	 * Si es así, se detiene la búsqueda y se retorna que ocurre un arbitraje.
+	 * Si no es así, entonces se sigue buscando, hasta probar todos los ciclos
+	 * de hasta |V| + 1 monedas.
 	 *
 	 * Complejidad: Encuentra todos los ciclos de hasta |V| + 1 monedas.
 	 * Y como cada ciclo puede empezar en |V| vértices, y puede tener |V| - 1
@@ -104,13 +105,13 @@ public class Arbitrage {
 	 * O(|V| * |V|+1 * |V|+1 * ... * |V|+1) = O(|V|^(|V|+1)).
 	 */
 	public static String recorrerCiclosRec(DigraphWithCost<String> grafo, List<String> cicloParcial,
-			Double minGanancia) {
+			Double maxGananciaDespreciable) {
 		// Verificamos si después de agregar la última moneda, volvemos a la moneda
 		// inicial.
 		if (cicloParcial.size() > 1 && cicloParcial.get(0).equals(cicloParcial.get(cicloParcial.size() - 1))) {
 			// Verificamos si al terminar el ciclo, tenemos más de 1 unidad de la moneda
 			// inicial. Es decir, si ocurre un arbitraje.
-			if (cantidadMonedaInicial(grafo, cicloParcial) > minGanancia) {
+			if (cantidadMonedaInicial(grafo, cicloParcial) > maxGananciaDespreciable) {
 				// Si es así, entonces retornamos que ocurre un arbitraje.
 				return "DINERO FÁCIL DESDE TU CASA";
 			}
@@ -126,7 +127,7 @@ public class Arbitrage {
 			String moneda = monedaMap.keySet().iterator().next();
 			cicloParcial.add(moneda);
 			// Llamamos recursivamente.
-			if (recorrerCiclosRec(grafo, cicloParcial, minGanancia) == "DINERO FÁCIL DESDE TU CASA") {
+			if (recorrerCiclosRec(grafo, cicloParcial, maxGananciaDespreciable) == "DINERO FÁCIL DESDE TU CASA") {
 				return "DINERO FÁCIL DESDE TU CASA";
 			}
 			// Eliminamos la ultima moneda agregada al ciclo parcial.
