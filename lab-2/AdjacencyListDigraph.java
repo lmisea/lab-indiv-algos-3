@@ -10,12 +10,9 @@ import java.util.List;
 
 public class AdjacencyListDigraph<T> implements Digraph<T> {
 	/*
-	 * Creamos dos HashMap que contiene una lista de adyacencia para cada vértice.
+	 * Creamos dos HashMap que contienen una lista de adyacencia para cada vértice.
 	 * El primer HashMap es para los sucesores del vértice y el segundo para los
 	 * predecesores.
-	 * Sea el grafo G = (V, E) con |V| = n y |E| = m, ambos HashMap tienen n
-	 * entradas
-	 * y la suma de las longitudes de las listas de adyacencia es 2m.
 	 */
 	private HashMap<T, List<T>> adjacencyListOut = new HashMap<T, List<T>>();
 	private HashMap<T, List<T>> adjacencyListIn = new HashMap<T, List<T>>();

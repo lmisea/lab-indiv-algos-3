@@ -10,8 +10,9 @@ import java.util.Map;
 
 public class DigraphWithCost<T> {
 	/*
-	 * Creamos un HashMap que mapea cada vértice a una lista de sus vertices
-	 * adyacentes. Solo es necesario un HashMap porque el grafo es no dirigido.
+	 * Creamos dos HashMap que contienen una lista de adyacencia para cada vértice.
+	 * El primer HashMap es para los sucesores del vértice y el segundo para los
+	 * predecesores.
 	 */
 	private HashMap<T, List<HashMap<T, Double>>> adjListIn = new HashMap<T, List<HashMap<T, Double>>>();
 	private HashMap<T, List<HashMap<T, Double>>> adjListOut = new HashMap<T, List<HashMap<T, Double>>>();
@@ -42,9 +43,12 @@ public class DigraphWithCost<T> {
 	 * También recibe un costo 'cost' que representa el costo de la arista.
 	 * Retorna true si la arista es agregada con éxito.
 	 * Retorna false en caso contrario.
+	 *
 	 * Complejidad: O(n). Siendo n la cantidad de vértices.
+	 *
 	 * Ya que se debe verificar que el arco no exista en el grafo.
-	 * Y para ello se debe recorrer la lista de adyacencia de 'from'.
+	 * Y también se debe eliminar la arista si ya existe en el grafo.
+	 * Para poder actualizar el costo de la arista.
 	 */
 	public boolean addEdge(T ver1, T ver2, Double cost) {
 		// Si alguno de los vértices no existe en el grafo, no se agrega la arista y
@@ -97,22 +101,35 @@ public class DigraphWithCost<T> {
 		return true;
 	}
 
+	/*
+	 * Recibe dos vértices 'ver1' y 'ver2' y retorna true si la arista (ver1, ver2)
+	 * existe en el grafo.
+	 * Retorna false en caso contrario.
+	 * Complejidad: O(n). Siendo n la cantidad de vértices.
+	 */
 	public boolean containsEdge(T ver1, T ver2) {
-		// Si alguno de los vértices no existe en el grafo, no se elimina la arista y
-		// se retorna false.
+		// Si alguno de los vértices no existe en el grafo, no existe la arista y se
+		// retorna false.
 		if (!contains(ver1) || !contains(ver2)) {
 			return false;
 		}
-		// Si la arista no existe en el grafo, no se elimina la arista y se retorna
-		// false.
+		// Se busca la arista en la lista de sucesores de 'ver1'.
 		for (HashMap<T, Double> edge : adjListOut.get(ver1)) {
 			if (edge.containsKey(ver2)) {
 				return true;
 			}
 		}
+		// Si no se encuentra la arista en la lista de sucesores de 'ver1', no existe
+		// la arista y se retorna false.
 		return false;
 	}
 
+	/*
+	 * Recibe dos vértices 'ver1' y 'ver2' y retorna el costo de la arista (ver1,
+	 * ver2).
+	 * Retorna null en caso de que la arista no exista en el grafo.
+	 * Complejidad: O(n). Siendo n la cantidad de vértices.
+	 */
 	public Double getCost(T ver1, T ver2) {
 		// Si alguno de los vértices no existe en el grafo, no se elimina la arista y
 		// se retorna false.
@@ -126,6 +143,7 @@ public class DigraphWithCost<T> {
 				return edge.get(ver2);
 			}
 		}
+		// Si no existe la arista, se retorna null.
 		return null;
 	}
 

@@ -60,9 +60,13 @@ Para resolver este problema, se modeló el conjunto de tasas de cambio como un g
 
 Dibujemos una tabla con las complejidades de cada método de la clase `Arbitrage`:
 
-| Método              | Complejidad     |
-| ------------------- | --------------- |
-| createCurrencyGraph | O(\|V\|\*\|E\|) |
+| Método                | Complejidad                |
+| --------------------- | -------------------------- |
+| createCurrencyGraph   | O(\|V\|\*\|E\|)            |
+| ocurreArbitraje       | O(\|V\|<sup>\|V\|+1</sup>) |
+| recorrerCiclosRec     | O(\|V\|<sup>\|V\|+1</sup>) |
+| monedasValidas        | O(\|V\|)                   |
+| cantidadMonedaInicial | O(\|V\|)                   |
 
 Donde `|V|` es la cantidad de monedas diferentes que hay, y `|E|` es la cantidad de tasas de cambio que hay.
 

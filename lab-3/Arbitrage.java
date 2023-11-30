@@ -10,6 +10,31 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Arbitrage {
+	public static void main(String[] args) {
+		// Se crea el grafo de monedas.
+		DigraphWithCost<String> graph = createCurrencyGraph("tasas.txt");
+
+		// Se verifica si ocurre un arbitraje.
+		ocurreArbitraje(graph, 1.001);
+	}
+
+	/*
+	 * Método que crea un grafo de monedas a partir de un archivo de texto.
+	 * Donde cada moneda es un vértice y cada tasa de cambio es una arista.
+	 * Cada arista tiene un costo que representa el valor de la tasa de cambio.
+	 * Por eso se termina con un dígrafo. Porque no es la misma tasa de cambio
+	 * pasar de una moneda A a una moneda B, que pasar de una moneda B a una
+	 * moneda A.
+	 *
+	 * Cada línea del archivo de texto debe tener el siguiente formato:
+	 * `moneda1 moneda2 tasa_de_cambio`
+	 *
+	 * Complejidad: O(|V|*|E|), donde |V| es el número de monedas y |E| es el
+	 * número de tasas de cambio.
+	 *
+	 * Ya que cada línea representa una arista del grafo, y por cada línea se
+	 * realiza una operación de costo O(|V|) (agregar la arista al grafo).
+	 */
 	public static DigraphWithCost<String> createCurrencyGraph(String nombreArchivo) {
 		DigraphWithCost<String> graph = new DigraphWithCost<String>();
 		// Se lee el archivo 'tasas.txt' y se procesa cada línea.
@@ -49,43 +74,59 @@ public class Arbitrage {
 		return graph;
 	}
 
-	public static void main(String[] args) {
-		// Se crea el grafo de monedas.
-		DigraphWithCost<String> graph = createCurrencyGraph("tasas.txt");
-		System.out.println(graph);
-		// Se verifica si ocurre un arbitraje.
-		ocurreArbitraje(graph);
-	}
-
-	public static void ocurreArbitraje(DigraphWithCost<String> grafo) {
+	/*
+	 * Método que verifica si ocurre un arbitraje en un grafo de monedas.
+	 * Un arbitraje ocurre cuando se puede hacer una secuencia de intercambios
+	 * de monedas, de tal forma que se obtenga una mayor cantidad de la moneda
+	 * inicial.
+	 *
+	 * Complejidad: O(|V|^(|V|+1)), donde |V| es el número de monedas.
+	 * Ya que se llama a recorrerCiclosRec, que tiene complejidad O(|V|^(|V|+1)).
+	 */
+	public static void ocurreArbitraje(DigraphWithCost<String> grafo, Double minGanancia) {
 		List<String> cicloInicial = new LinkedList<>();
-		System.out.println(recorrerCiclosRec(grafo, cicloInicial));
+		System.out.println(recorrerCiclosRec(grafo, cicloInicial, minGanancia));
 	}
 
-	public static String recorrerCiclosRec(DigraphWithCost<String> grafo, List<String> cicloParcial) {
+	/*
+	 * Método que recorre todos los ciclos de un grafo de monedas.
+	 * Para ello, se hace una búsqueda en profundidad (DFS) sobre el grafo.
+	 * Cada vez que se llega a un vértice, se agrega al ciclo parcial.
+	 * Cuando se llega a un vértice que ya está en el ciclo parcial, se verifica
+	 * si se ha obtenido una mayor cantidad de la moneda inicial.
+	 * Si es así, entonces se retorna que ocurre un arbitraje.
+	 * Si no es así, entonces se sigue buscando.
+	 *
+	 * Complejidad: Encuentra todos los ciclos de hasta |V| + 1 monedas.
+	 * Y como cada ciclo puede empezar en |V| vértices, y puede tener |V| - 1
+	 * monedas para la segunda moneda, |V| - 1 para la tercera y así sucesivamente,
+	 * hasta |V| - 1 para la última moneda. Entonces, la complejidad es:
+	 * O(|V| * |V|+1 * |V|+1 * ... * |V|+1) = O(|V|^(|V|+1)).
+	 */
+	public static String recorrerCiclosRec(DigraphWithCost<String> grafo, List<String> cicloParcial,
+			Double minGanancia) {
 		// Verificamos si después de agregar la última moneda, volvemos a la moneda
 		// inicial.
-		if (cicloParcial.size() > grafo.size() + 1) {
-			return "";
-		}
 		if (cicloParcial.size() > 1 && cicloParcial.get(0).equals(cicloParcial.get(cicloParcial.size() - 1))) {
 			// Verificamos si al terminar el ciclo, tenemos más de 1 unidad de la moneda
 			// inicial. Es decir, si ocurre un arbitraje.
-			if (cantidadMonedaInicial(grafo, cicloParcial) > 1.001) {
+			if (cantidadMonedaInicial(grafo, cicloParcial) > minGanancia) {
 				// Si es así, entonces retornamos que ocurre un arbitraje.
-				System.out.println("Solución parcial: " + cicloParcial);
 				return "DINERO FÁCIL DESDE TU CASA";
 			}
-			System.out.println("Solución parcial: " + cicloParcial);
 			return "";
 		}
 		// Si aún no hemos llegado al final del ciclo, entonces seguimos buscando
 		for (HashMap<String, Double> monedaMap : monedasValidas(grafo, cicloParcial)) {
+			// Establecemos que la longitud máxima del ciclo sea |V| + 1
+			if (cicloParcial.size() > grafo.size()) {
+				return "";
+			}
 			// Agregamos la siguiente moneda al ciclo parcial.
 			String moneda = monedaMap.keySet().iterator().next();
 			cicloParcial.add(moneda);
 			// Llamamos recursivamente.
-			if (recorrerCiclosRec(grafo, cicloParcial) == "DINERO FÁCIL DESDE TU CASA") {
+			if (recorrerCiclosRec(grafo, cicloParcial, minGanancia) == "DINERO FÁCIL DESDE TU CASA") {
 				return "DINERO FÁCIL DESDE TU CASA";
 			}
 			// Eliminamos la ultima moneda agregada al ciclo parcial.
@@ -95,6 +136,13 @@ public class Arbitrage {
 		return "TODO GUAY DEL PARAGUAY";
 	}
 
+	/*
+	 * Método que retorna las monedas válidas para agregar al ciclo parcial.
+	 * Es decir, las monedas que son adyacentes a la última moneda del ciclo
+	 * parcial.
+	 * O todas las monedas del grafo, si el ciclo parcial está vacío.
+	 * Complejidad: O(|V|) donde |V| es el número de monedas.
+	 */
 	public static List<HashMap<String, Double>> monedasValidas(DigraphWithCost<String> grafo,
 			List<String> cicloParcial) {
 		// Verificamos si cicloParcial no tiene elementos.
@@ -117,6 +165,12 @@ public class Arbitrage {
 		return grafo.getOutwardEdges(ultima);
 	}
 
+	/*
+	 * Método que calcula la cantidad de moneda inicial que se obtiene al
+	 * recorrer un ciclo parcial.
+	 * Complejidad: O(|V|), donde |V| es el número de monedas.
+	 * Ya que el ciclo más largo que se puede formar es de |V| + 1 monedas.
+	 */
 	public static Double cantidadMonedaInicial(DigraphWithCost<String> grafo, List<String> ciclo) {
 		// Tomamos la primera moneda del ciclo parcial.
 		String monedaInicial = ciclo.get(0);
@@ -133,7 +187,6 @@ public class Arbitrage {
 			// Multiplicamos la cantidad de moneda inicial por el costo de la arista.
 			cantidad *= costo;
 		}
-		System.err.println("Cantidad de moneda inicial: " + cantidad);
 		// Retornamos la cantidad de moneda inicial.
 		return cantidad;
 	}
