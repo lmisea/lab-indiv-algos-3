@@ -6,18 +6,28 @@
 ## Descripción
 
 Este laboratorio consiste en implementar un programa que determine si se puede hacer arbitrage con un conjunto de tasas de cambio.
-Arbitrage entre monedas es la posibilidad de obtener ganancias a partir de la diferencia de tasas de cambio entre dos monedas.
+Arbitrage entre monedas es la posibilidad de obtener ganancias a partir de intercambiar una moneda por otra y luego por otra y así sucesivamente hasta terminar con más dinero que con el que empezaste.
 
-Por ejemplo, si 1 dólar estadounidense equivale a 0.7 libras esterlinas, y 1 libra esterlina equivale a 9.5 francos franceses, entonces 1 dólar estadounidense pasado a libras esterlinas y luego a francos franceses equivale a 0.7 \* 9.5 = 6.65 francos franceses. Como 1 franco francés equivale a 0.16 dólares estadounidenses, entonces 6.65 francos franceses equivale a 6.65 \* 0.16 = 1.064 dólares estadounidenses. Esto quiere decir que si se tiene 1 dólar estadounidense, se puede convertir a 1.064 dólares estadounidenses usando arbitrage.
+Por ejemplo, con las siguientes tasas de cambio:
+
+```txt
+USD GBP 0.7
+GBP FRF 9.5
+FRF USD 0.16
+```
+
+Puedes intercambiar 1 dólar estadounidense por 0.7 libras esterlinas, luego intercambiar esas 0.7 libras esterlinas por 6.65 francos franceses, y luego intercambiar esos 6.65 francos franceses por 1.064 dólares estadounidenses. Es decir, que con 1 dólar estadounidense puedes obtener 1.064 dólares estadounidenses, lo cual es una ganancia de 0.064 dólares estadounidenses. Y esto es que se conoce como arbitrage.
 
 ### Planteamiento del problema
 
 Se desea implementar un programa que determine si se puede hacer arbitrage con un conjunto de tasas de cambio. Estas tasas de cambio se encuentran en un archivo _tasas.txt_ en el mismo directorio que el programa.
+En caso de que se pueda hacer arbitrage, el programa debe imprimir `DINERO FÁCIL DESDE TU CASA`. En caso contrario, el programa debe imprimir `TODO GUAY DEL PARAGUAY`.
 
 ## Estructura de archivos
 
 - **Arbitrage.java**: Este archivo contiene la clase principal del programa, `Arbitrage`, que se encarga de leer el archivo _tasas.txt_, añade las monedas y las tasas de cambio al grafo, y luego determina si se puede hacer arbitrage o no.
-- **DigraphWithCost.java**: Archivo con la implementación de un grafo dirigido con costos. Para esto se modificó la lista de adyacencia usada en el primer proyecto para que ahora cada nodo tenga una lista de HashMaps, donde cada HashMap representa una arista y tiene como llave el nodo destino y como valor el costo de la arista.
+- **DigraphWithCost.java**: Archivo con la implementación de un grafo dirigido con costos. Para esto se modificó la listas de adyacencia usadas en el primer proyecto para que ahora cada nodo tenga asociado lista de HashMaps, donde cada HashMap tiene como key el nodo adyacente y como value el costo de la arista que los une.
+  También se realizaron modificaciones a los métodos `addEdge` y `removeEdge` para que ahora se puedan añadir y remover aristas con costos. Y se añadieron los métodos `getCost` y `containsEdge` para obtener el costo de una arista y saber si una arista existe, respectivamente.
 - **tasas.txt**: Archivo con las distintas monedas y su correspondiente tasa de cambio. Cada línea del archivo contiene un par de monedas y su tasa de cambio. El formato de cada línea es el siguiente: `<moneda1> <moneda2> <tasa de cambio>`. Por ejemplo, la línea `USD GBP 0.7` indica que 1 dólar estadounidense equivale a 0.7 libras esterlinas.
 
   Ejemplo _tasas.txt_:
@@ -27,6 +37,8 @@ Se desea implementar un programa que determine si se puede hacer arbitrage con u
   GBP FRF 9.5
   FRF USD 0.16
   ```
+
+  El programa soporta que se ingresen tasas de cambio unidireccionales y bidireccionales. Es decir, se puede ingresar `moneda1 moneda2 tasa` y `moneda2 moneda1 tasaInversa` en el archivo _tasas.txt_ y el programa funcionará correctamente. Pero funcionará de la misma forma si se ingresa solo `moneda1 moneda2 tasa` y se omite `moneda2 moneda1 tasaInversa`.
 
 ## Compilación y ejecución
 
@@ -57,7 +69,7 @@ Esto indica que sí se puede hacer arbitrage con las tasas de cambio del archivo
 Para resolver este problema, se modeló un grafo dirigido con costos, donde cada nodo representa una moneda y cada arista representa una tasa de cambio. Para esto, se modificó la implementación del grafo dirigido con listas de adyacencia del primer proyecto para que ahora cada nodo tenga dos listas de HashMaps, una para los nodos sucesores y otra para los nodos predecesores
 donde cada HashMap en estas listas representa una arista y tiene como key el nodo destino y como value el costo de la arista.
 
-Por cada tasa de cambio en el archivo _tasas.txt_, se crean dos aristas, una en cada dirección, para que el grafo sea bidireccional. Y se construye el costo de la arista inversa usando la regla de tres. Pero el programa también soporta que se ingrese la tasa inversa de una tasa de cambio ya existente, y en ese caso solo se actualiza el costo de la arista inversa. Esto hace que el programa soporte tasas unidireccionales y bidireccionales al mismo tiempo.
+Por cada tasa de cambio en el archivo _tasas.txt_, se crean dos aristas, una en cada dirección, para que el grafo sea bidireccional. Y se construye el costo de la arista inversa usando una regla de tres. Pero el programa también soporta que se ingrese la tasa inversa de una tasa de cambio ya existente, y en ese caso solo se actualiza el costo de la arista inversa. Esto hace que el programa soporte tasas unidireccionales y bidireccionales al mismo tiempo.
 
 Para determinar si se puede hacer arbitrage, se recorre el grafo usando DFS, recorriendo todos los ciclos posibles de hasta `|V|+1` nodos. Cuando se encuentra un ciclo, se calcula la cantidad de moneda inicial que se obtiene al recorrer el ciclo, y si esta cantidad es mayor a **1.001**, entonces el programa imprime `DINERO FÁCIL DESDE TU CASA` y termina. Si no se encuentra ningún ciclo que cumpla con esta condición, entonces el programa imprime `NO SE PUEDE HACER DINERO FÁCIL DESDE TU CASA` y termina.
 

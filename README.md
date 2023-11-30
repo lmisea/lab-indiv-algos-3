@@ -12,6 +12,10 @@ El laboratorio 1 consiste en la implementación de un programa que permita estab
 
 El laboratorio 2 consiste en la implementación de un programa que le permita a la aplicación de delivery _NextToYou_ calcular cuántos repartidores debe contratar para cubrir una ciudad. Se implementó el algoritmo de **Roy-Warshall** para calcular la matriz de alcance y con ella se usó el algoritmo dado en el libro de _Meza_ y _Ortega_ para calcular las componentes fuertemente conexas del grafo. Más detalles en el [informe del segundo laboratorio](https://github.com/lmisea/lab-indiv-algos-3/tree/main/lab-2#readme).
 
+## Laboratorio 3
+
+El laboratorio 3 consiste en la implementación de un programa que determine si se puede hacer arbitrage con un conjunto de tasas de cambio. Se implementó un grafo dirigido con costos para resolver este problema y una búsqueda DPS sobre todos los ciclos posibles de hasta longitud `|V|+1`, donde `|V|` es la cantidad de monedas diferentes que hay. Más detalles en el [informe del tercer laboratorio](https://github.com/lmisea/lab-indiv-algos-3/tree/main/lab-3#readme).
+
 ## Autor
 
 **Estudiante:** _Luis Isea_.
