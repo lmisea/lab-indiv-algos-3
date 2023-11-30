@@ -102,7 +102,7 @@ public class Arbitrage {
 	 * Y como cada ciclo puede empezar en |V| vértices, y puede tener |V| - 1
 	 * monedas para la segunda moneda, |V| - 1 para la tercera y así sucesivamente,
 	 * hasta |V| - 1 para la última moneda. Entonces, la complejidad es:
-	 * O(|V| * |V|+1 * |V|+1 * ... * |V|+1) = O(|V|^(|V|+1)).
+	 * O(|V| * (|V| - 1) * (|V| - 1) * ... * (|V| - 1)) = O(|V|^(|V|+1)).
 	 */
 	public static String recorrerCiclosRec(DigraphWithCost<String> grafo, List<String> cicloParcial,
 			Double maxGananciaDespreciable) {

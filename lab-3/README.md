@@ -79,9 +79,9 @@ De todas formas, si se desea cambiar este valor, se puede modificar el parámetr
 
 Este programa tiene una complejidad de **O(\|V\|<sup>\|V\|+1</sup>)**, donde `|V|` es la cantidad de monedas diferentes que hay. Esto se debe a que hay `|V|` nodos posibles para empezar el ciclo de intercambios, y cada nodo siguiente en el ciclo tiene `|V|-1` nodos siguientes posibles, sin importar la posición en la que se encuentre en el ciclo. Esto incluye el nodo final del ciclo, que puede ser cualquiera de los `|V|-1` nodos distintos al penúltimo nodo del ciclo.
 
-Así se tiene que la cantidad de ciclos posibles es `|V|*(|V|-1)*(|V|-1)*...*(|V|-1)`, es decir, `|V|` multiplicado por `|V|` veces `|V|-1`. Esto es igual a **O(|V|<sup>\|V\|+1</sup>)**.
+Así se tiene que la cantidad de ciclos posibles es `|V|*(|V| - 1)*(|V| - 1)*...*(|V| - 1)`, es decir, `|V|` multiplicado por `|V|` veces `|V| - 1`. Esto es igual a **O(|V|<sup>\|V\|+1</sup>)**.
 
-Esto suponiendo claro que cada moneda tiene una tasa de cambio con todas las demás monedas, es decir, cada moneda tiene `|V|-1` monedas con las que se puede intercambiar. Si una moneda no tiene tasa de cambio con alguna otra moneda, entonces se reduce la cantidad de ciclos posibles, y por lo tanto, la complejidad del algoritmo.
+Esto suponiendo claro que cada moneda tiene una tasa de cambio con todas las demás monedas, es decir, cada moneda tiene `|V| - 1` monedas con las que se puede intercambiar. Si una moneda no tiene tasa de cambio con alguna otra moneda, entonces se reduce la cantidad de ciclos posibles, y por lo tanto, la complejidad del algoritmo.
 
 ## Complejidad del algoritmo
 
