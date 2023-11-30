@@ -6,7 +6,7 @@
 ## Descripción
 
 Este laboratorio consiste en implementar un programa que determine si se puede hacer arbitrage con un conjunto de tasas de cambio.
-Arbitrage entre monedas es la posibilidad de obtener ganancias a partir de intercambiar una moneda por otra y luego por otra y así sucesivamente hasta terminar con más dinero que con el que empezaste.
+Arbitrage entre monedas es la posibilidad de obtener ganancias a partir de intercambiar una moneda por otra y luego por otra y así sucesivamente hasta terminar con más dinero que con el que se empezó.
 
 Por ejemplo, con las siguientes tasas de cambio:
 
@@ -16,7 +16,7 @@ GBP FRF 9.5
 FRF USD 0.16
 ```
 
-Puedes intercambiar 1 dólar estadounidense por 0.7 libras esterlinas, luego intercambiar esas 0.7 libras esterlinas por 6.65 francos franceses, y luego intercambiar esos 6.65 francos franceses por 1.064 dólares estadounidenses. Es decir, que con 1 dólar estadounidense puedes obtener 1.064 dólares estadounidenses, lo cual es una ganancia de 0.064 dólares estadounidenses. Y esto es que se conoce como arbitrage.
+Se puede intercambiar 1 dólar estadounidense por 0.7 libras esterlinas, luego intercambiar esas 0.7 libras esterlinas por 6.65 francos franceses, y luego intercambiar esos 6.65 francos franceses por 1.064 dólares estadounidenses. Es decir, que con 1 dólar estadounidense se pueden obtener 1.064 dólares estadounidenses, lo cual es una ganancia de 0.064 dólares estadounidenses. Y esto es lo que se conoce como arbitrage, **obtener ganancias a partir de intercambiar monedas**.
 
 ### Planteamiento del problema
 
@@ -71,15 +71,17 @@ donde cada HashMap en estas listas representa una arista y tiene como key el nod
 
 Por cada tasa de cambio en el archivo _tasas.txt_, se crean dos aristas, una en cada dirección, para que el grafo sea bidireccional. Y se construye el costo de la arista inversa usando una regla de tres. Pero el programa también soporta que se ingrese la tasa inversa de una tasa de cambio ya existente, y en ese caso solo se actualiza el costo de la arista inversa. Esto hace que el programa soporte tasas unidireccionales y bidireccionales al mismo tiempo.
 
-Para determinar si se puede hacer arbitrage, se recorre el grafo usando DFS, recorriendo todos los ciclos posibles de hasta `|V|+1` nodos. Cuando se encuentra un ciclo, se calcula la cantidad de moneda inicial que se obtiene al recorrer el ciclo, y si esta cantidad es mayor a **1.001**, entonces el programa imprime `DINERO FÁCIL DESDE TU CASA` y termina. Si no se encuentra ningún ciclo que cumpla con esta condición, entonces el programa imprime `NO SE PUEDE HACER DINERO FÁCIL DESDE TU CASA` y termina.
+Para determinar si se puede hacer arbitrage, se recorre el grafo usando DFS, recorriendo todos los ciclos posibles de hasta `|V|+1` nodos. Cuando se encuentra un ciclo, se calcula la cantidad de moneda inicial que se obtiene al recorrer el ciclo, y si esta cantidad es mayor a **1.001**, entonces el programa imprime `DINERO FÁCIL DESDE TU CASA` y la búsqueda termina. Si el ciclo no produce una ganancia mayor a **1.001**, entonces se sigue buscando ciclos hasta que se recorran todos los ciclos posibles de hasta `|V|+1` nodos. Si no se encuentra ningún ciclo que produzca una ganancia mayor a **1.001**, entonces el programa imprime `TODO GUAY DEL PARAGUAY` y la búsqueda termina.
 
 Se decidió poner `1.001` como el máximo valor de ganancia antes de que se considere que se puede hacer arbitraje. Es decir, que si se obtiene una ganancia de `1.001` o menos, entonces no se considera que se puede hacer arbitraje. Esto se debe a que ocurren errores de redondeo al hacer las operaciones con los costos de las aristas, y por lo tanto, no se puede asegurar que se pueda hacer arbitraje con una ganancia de `1.001` o menos.
 
 De todas formas, si se desea cambiar este valor, se puede modificar el parámetro _maxGananciaDespreciable_ en la llamada al método `ocurreArbitraje` en el método `main` de la clase `Arbitrage` y así decidir a partir de qué valor se considera que se puede hacer arbitraje.
 
-Este programa tiene una complejidad de **O(\|V\|<sup>\|V\|+1</sup>)**, donde `|V|` es la cantidad de monedas diferentes que hay. Esto se debe a que hay `|V|` nodos posibles para empezar el recorrido, y cada nodo siguiente tiene `|V|-1` nodos siguientes posibles, sin importar la posición en la que se encuentre en el recorrido.
+Este programa tiene una complejidad de **O(\|V\|<sup>\|V\|+1</sup>)**, donde `|V|` es la cantidad de monedas diferentes que hay. Esto se debe a que hay `|V|` nodos posibles para empezar el ciclo de intercambios, y cada nodo siguiente en el ciclo tiene `|V|-1` nodos siguientes posibles, sin importar la posición en la que se encuentre en el ciclo. Esto incluye el nodo final del ciclo, que puede ser cualquiera de los `|V|-1` nodos distintos al penúltimo nodo del ciclo.
 
 Así se tiene que la cantidad de ciclos posibles es `|V|*(|V|-1)*(|V|-1)*...*(|V|-1)`, es decir, `|V|` multiplicado por `|V|` veces `|V|-1`. Esto es igual a **O(|V|<sup>\|V\|+1</sup>)**.
+
+Esto suponiendo claro que cada moneda tiene una tasa de cambio con todas las demás monedas, es decir, cada moneda tiene `|V|-1` monedas con las que se puede intercambiar. Si una moneda no tiene tasa de cambio con alguna otra moneda, entonces se reduce la cantidad de ciclos posibles, y por lo tanto, la complejidad del algoritmo.
 
 ## Complejidad del algoritmo
 
